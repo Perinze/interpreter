@@ -19,15 +19,11 @@ test =
   let
     tree =
       Node 0
-        Node -1 Null Null
-        Node 3
-          Node 2 Null Null
+        ( Node (-1) Null Null )
+        ( Node 3
+          ( Node 2 Null Null )
           Null
-        Node 5
-          Node 4 Null Null
-          Node 6 Null Null
-    result = search tree 4
+        )
+    result = search tree 3
   in
-    case result of
-      Some value -> show value
-      None -> "not found"
+    maybe "not found" show result

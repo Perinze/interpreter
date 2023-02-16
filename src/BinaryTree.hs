@@ -1,30 +1,29 @@
 module BinaryTree
-  ( Tree
+  ( Tree (..)
   , search
   , insert
   , erase)
   where
+import Data.Maybe (fromMaybe)
 
 data Tree
-  = Node int Tree Tree
+  = Node Int Tree Tree
   | Null
-  derive Show
+  deriving Show
 
-search :: Tree -> int -> Maybe int
+search :: Tree -> Int -> Maybe Int
 search tree target =
   case tree of
     Node value left right ->
       if value == target then
-        Some value
+        Just value
       else
-        (search left) >>=
-          \ret ->
-            case ret of
-              Some result -> Some result
-              None -> search right
-    Null -> None
+        case search left target of
+            Just result -> Just result
+            Nothing -> search right target
+    Null -> Nothing
 
-insert :: Tree -> int -> Tree
+insert :: Tree -> Int -> Tree
 insert tree item =
   case tree of
     Node value left right ->
@@ -43,38 +42,56 @@ insert tree item =
     Null -> 
       Node item Null Null
 
-erase :: Tree -> int -> Tree
+erase :: Tree -> Int -> Tree
 erase tree item =
   case tree of
     Node value left right ->
       if item == value then
         let
-          (poped, leaf) = popMost left
+          -- Just v = most tree
+          v = fromMaybe 0 (most tree)
+          poped = popLeaf tree v
         in
           Node
-            (valueOf leaf)
+            v
             poped
             right
       else if item < value then
         Node
           value 
-          (erase left)
+          (erase left item)
           right
       else -- if item > value then
         Node
           value
           left
-          (erase right)
+          (erase right item)
     Null -> Null
 
-popMost :: Tree -> Maybe int
-popMost tree =
+most :: Tree -> Maybe Int
+most tree =
   case tree of
     Node value _ right ->
       let
-        ret = popMost right
+        ret = most right
       in
         case ret of
-          Some result -> ret
-          None -> Some value
-    Null -> None
+          Just _ -> ret
+          Nothing -> Just value
+    Null -> Nothing
+
+popLeaf :: Tree -> Int -> Tree
+popLeaf tree item =
+  case tree of
+    Node value Null Null ->
+      if item == value then
+        Null
+      else
+        tree
+    _ -> tree
+
+valueOf :: Tree -> Maybe Int
+valueOf tree =
+  case tree of
+    Node value _ _ -> Just value
+    Null -> Nothing
