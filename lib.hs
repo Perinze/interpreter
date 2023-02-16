@@ -1,6 +1,8 @@
 data expr
   = Const int
   | Add expr expr
+  | Var String
+  | Let String expr
   derive show
 
 eval :: expr -> int
