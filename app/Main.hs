@@ -18,12 +18,12 @@ test :: String
 test =
   let
     tree =
-      Node 0
-        ( Node (-1) Null Null )
-        ( Node 3
-          ( Node 2 Null Null )
+      Node ("a", 1)
+        ( Node ("b", -1) Null Null )
+        ( Node ("c", 3)
+          ( Node ("d", 4) Null Null )
           Null
         )
-    result = search tree 3
+    result = search tree "c"
   in
     maybe "not found" show result

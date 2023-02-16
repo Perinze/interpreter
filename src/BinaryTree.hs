@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 module BinaryTree
   ( Tree (..)
   , search
@@ -7,23 +8,29 @@ module BinaryTree
 import Data.Maybe (fromMaybe)
 
 data Tree
-  = Node Int Tree Tree
+  = Node Entry Tree Tree
   | Null
   deriving Show
 
-search :: Tree -> Int -> Maybe Int
+type Entry
+  = (String, Int)
+
+search :: Tree -> String -> Maybe Int
 search tree target =
   case tree of
-    Node value left right ->
-      if value == target then
+    Node (key, value) left right ->
+      if key == target then
         Just value
       else
-        case search left target of
-            Just result -> Just result
+        let
+          ret = search left target
+        in
+          case ret of
+            Just _ -> ret
             Nothing -> search right target
     Null -> Nothing
 
-insert :: Tree -> Int -> Tree
+insert :: Tree -> Entry -> Tree
 insert tree item =
   case tree of
     Node value left right ->
@@ -42,45 +49,45 @@ insert tree item =
     Null -> 
       Node item Null Null
 
-erase :: Tree -> Int -> Tree
+erase :: Tree -> String -> Tree
 erase tree item =
   case tree of
-    Node value left right ->
-      if item == value then
+    Node (key, value) left right ->
+      if item == key then
         let
           -- Just v = most tree
-          v = fromMaybe 0 (most tree)
+          v = fromMaybe ("", 0) (most tree)
           poped = popLeaf tree v
         in
           Node
             v
             poped
             right
-      else if item < value then
+      else if item < key then
         Node
-          value 
+          (key, value) 
           (erase left item)
           right
-      else -- if item > value then
+      else -- if item > key then
         Node
-          value
+          (key, value)
           left
           (erase right item)
     Null -> Null
 
-most :: Tree -> Maybe Int
+most :: Tree -> Maybe Entry
 most tree =
   case tree of
-    Node value _ right ->
+    Node entry _ right ->
       let
         ret = most right
       in
         case ret of
           Just _ -> ret
-          Nothing -> Just value
+          Nothing -> Just entry
     Null -> Nothing
 
-popLeaf :: Tree -> Int -> Tree
+popLeaf :: Tree -> Entry -> Tree
 popLeaf tree item =
   case tree of
     Node value Null Null ->
@@ -90,7 +97,7 @@ popLeaf tree item =
         tree
     _ -> tree
 
-valueOf :: Tree -> Maybe Int
+valueOf :: Tree -> Maybe Entry
 valueOf tree =
   case tree of
     Node value _ _ -> Just value
