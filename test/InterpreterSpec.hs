@@ -1,6 +1,7 @@
 module InterpreterSpec where
 
 import Test.Hspec
+import Lang
 import Interpreter
 
 spec :: Spec
@@ -16,9 +17,20 @@ spec = do
         ( Const 2 )
       )
       3
+    
+    evalTest "let"
+      ( Let "x" ( Const 14 )
+        ( Add 
+          ( Var "x" )
+          ( Add
+            ( Const (-15) )
+            ( Var "x")
+          )
+        )
+      )
+      13
 
-
-evalTest :: String -> Expr -> Int -> Int
+evalTest :: String -> Expr -> Int -> SpecWith ()
 evalTest name expr expect =
   it name $
     shouldBe
