@@ -9,7 +9,7 @@ module StackMachine
 data Instruction
   = Const Int
   | Add
-  deriving Show
+  deriving (Show, Eq)
 
 type Instructions = [Instruction]
 type Stack = [Int]
