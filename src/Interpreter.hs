@@ -1,17 +1,10 @@
 module Interpreter
-  ( Expr (..)
-  , emptyEnv
+  ( emptyEnv
   , eval
   )
   where
 import qualified Data.Map as Map
-
-data Expr
-  = Const Int
-  | Add Expr Expr
-  | Var String
-  | Let String Expr Expr
-  deriving Show
+import Lang
 
 type Env = Map.Map String Int
 

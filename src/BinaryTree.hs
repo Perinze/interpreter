@@ -90,8 +90,8 @@ most tree =
 popLeaf :: Tree -> Entry -> Tree
 popLeaf tree item =
   case tree of
-    Node value Null Null ->
-      if item == value then
+    Node entry Null Null ->
+      if item == entry then
         Null
       else
         tree

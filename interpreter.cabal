@@ -34,6 +34,7 @@ library
     , containers
   exposed-modules:
     BinaryTree
+    Lang
     Interpreter
     StackMachine
 

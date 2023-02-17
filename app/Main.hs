@@ -1,5 +1,6 @@
 module Main where
 import Interpreter
+import Lang
 
 main :: IO ()
 main = do
