@@ -1,14 +1,14 @@
 module Nameless
-  ( Cenv
+  ( Env
   , Expr (..)
   , emptyEnv
   , eval
   )
   where
   
-type Cenv = [Int]
+type Env = [Int]
 
-emptyEnv :: Cenv
+emptyEnv :: Env
 emptyEnv = []
 
 data Expr
@@ -17,7 +17,7 @@ data Expr
   | Var Int
   | Let Expr Expr
 
-eval :: Cenv -> Expr -> Int
+eval :: Env -> Expr -> Int
 eval env expr =
   case expr of
     Const i -> i
@@ -29,3 +29,4 @@ eval env expr =
         newEnv = env ++ [varValue]
       in
         eval newEnv letExpr
+
