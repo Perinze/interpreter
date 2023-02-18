@@ -1,10 +1,16 @@
 module Nameless
   ( Env
-  , Expr (..)
   , emptyEnv
+  , Expr (..)
   , eval
+  , Cenv
+  , emptyCenv
+  , compile
   )
   where
+
+import qualified Lang
+import qualified Data.Map as Map
   
 type Env = [Int]
 
@@ -30,3 +36,19 @@ eval env expr =
       in
         eval newEnv letExpr
 
+type Cenv = Map.Map String Int
+
+emptyCenv :: Cenv
+emptyCenv = Map.empty
+
+compile :: Cenv -> Lang.Expr -> Expr
+compile cenv expr =
+  case expr of
+    Lang.Const i -> Const i
+    Lang.Add e1 e2 -> Add (compile cenv e1) (compile cenv e2)
+    Lang.Var name -> Var (cenv Map.! name)
+    Lang.Let varName varExpr letExpr ->
+      let
+        newCenv = Map.insert varName (Map.size cenv) cenv
+      in
+        Let (compile cenv varExpr) (compile newCenv letExpr)

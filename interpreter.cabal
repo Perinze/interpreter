@@ -35,10 +35,8 @@ library
   exposed-modules:
     BinaryTree
     Lang
-    Interpreter
-    StackMachine
-    Compiler
     Nameless
+    StackMachine
 
 executable interpreter
   import: common-settings
@@ -61,10 +59,10 @@ test-suite test
   main-is: Spec.hs
 
   other-modules:
-    StackMachineSpec
-    InterpreterSpec
-    CompilerSpec
+    LangSpec
     NamelessSpec
+    StackMachineSpec
+    CompilerSpec
   build-depends:
       base
     , hspec

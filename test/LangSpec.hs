@@ -1,12 +1,11 @@
-module InterpreterSpec where
+module LangSpec where
 
 import Test.Hspec
 import Lang
-import Interpreter
 
 spec :: Spec
 spec = do
-  describe "Interpreter tests" $ do
+  describe "Lang tests" $ do
     evalTest "const"
       ( Const 1 )
       1
