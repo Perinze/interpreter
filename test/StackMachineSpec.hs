@@ -8,12 +8,12 @@ spec = do
   describe "Stack machine tests" $ do
     it "const" $
       shouldBe
-        ( exec [ Const 1 ] [] )
+        ( eval [ Const 1 ] [] )
         1
     
     it "add" $
       shouldBe
-        ( exec
+        ( eval
           [ Const 1
           , Const 2
           , Add

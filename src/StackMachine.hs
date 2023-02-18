@@ -2,29 +2,33 @@ module StackMachine
   ( Instruction (..)
   , Instructions
   , Stack
-  , exec
+  , eval
   )
   where
 
 data Instruction
   = Const Int
   | Add
+  | Var Int -- push stack[i], where i is indexed from top
+  | Pop
+  | Swap
   deriving (Show, Eq)
 
 type Instructions = [Instruction]
 type Stack = [Int]
 
-exec :: Instructions -> Stack -> Int
-exec instrs stack =
+-- TODO: implement eval for Var, Pop and Swap
+eval :: Instructions -> Stack -> Int
+eval instrs stack =
   case instrs of
     [] -> head stack
     instr : resti ->
       case instr of
         Const i ->
-          exec resti (i : stack)
+          eval resti (i : stack)
         Add ->
           let
             a : b : rests = stack
             c = a + b
           in
-            exec resti (c : rests)
+            eval resti (c : rests)
