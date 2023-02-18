@@ -1,15 +1,31 @@
 module Nameless
-  (
+  ( Cenv
+  , Expr (..)
+  , emptyEnv
+  , eval
   )
   where
   
-import qualified Data.List as List
-
-type Cenv = List.List Int
+type Cenv = [Int]
 
 emptyEnv :: Cenv
-emptyEnv = List.empty
+emptyEnv = []
 
 data Expr
+  = Const Int
+  | Add Expr Expr
+  | Var Int
+  | Let Expr Expr
 
-eval :: Cenv -> 
+eval :: Cenv -> Expr -> Int
+eval env expr =
+  case expr of
+    Const i -> i
+    Add e1 e2 -> (eval env e1) + (eval env e2)
+    Var n -> env !! n
+    Let varExpr letExpr ->
+      let
+        varValue = eval env varExpr
+        newEnv = env ++ [varValue]
+      in
+        eval newEnv letExpr

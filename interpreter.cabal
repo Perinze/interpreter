@@ -38,6 +38,7 @@ library
     Interpreter
     StackMachine
     Compiler
+    Nameless
 
 executable interpreter
   import: common-settings
@@ -63,6 +64,7 @@ test-suite test
     StackMachineSpec
     InterpreterSpec
     CompilerSpec
+    NamelessSpec
   build-depends:
       base
     , hspec
