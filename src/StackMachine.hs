@@ -32,3 +32,15 @@ eval instrs stack =
             c = a + b
           in
             eval resti (c : rests)
+        Var n ->
+          let
+            v = stack !! n
+          in
+            eval resti (v : stack)
+        Pop ->
+          eval resti (tail stack)
+        Swap ->
+          let
+            a : b : rests = stack
+          in
+            eval resti (b : a : rests)
