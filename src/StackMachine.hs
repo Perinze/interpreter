@@ -3,8 +3,12 @@ module StackMachine
   , Instructions
   , Stack
   , eval
+  , Cenv
+  , emptyCenv
+  , compile
   )
   where
+import qualified Nameless
 
 data Instruction
   = Const Int
@@ -17,7 +21,6 @@ data Instruction
 type Instructions = [Instruction]
 type Stack = [Int]
 
--- TODO: implement eval for Var, Pop and Swap
 eval :: Instructions -> Stack -> Int
 eval instrs stack =
   case instrs of
@@ -44,3 +47,34 @@ eval instrs stack =
             a : b : rests = stack
           in
             eval resti (b : a : rests)
+          
+type Cenv = [Int]
+
+emptyCenv :: [Int]
+emptyCenv = []
+
+compile :: Cenv -> Nameless.Expr -> Int -> Instructions
+compile cenv expr depth =
+  let
+    comp c e prefix = compile c e (depth + prefix)
+  in
+    case expr of
+      Nameless.Const i ->
+        [ Const i ]
+      Nameless.Add e1 e2 ->
+        ( comp cenv e1 0 )
+        ++ ( comp cenv e2 1 )
+        ++ [ Add ]
+      Nameless.Var n ->
+        let
+          varDepth = cenv !! n
+          varOffset = depth - varDepth - 1
+        in
+          [ Var varOffset ]
+      Nameless.Let varExpr letExpr ->
+        let
+          newCenv = cenv ++ [ depth ]
+        in
+          ( comp cenv varExpr 0 )
+          ++ ( comp newCenv letExpr 1 )
+          ++ [ Swap, Pop ]
